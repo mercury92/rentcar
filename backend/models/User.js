@@ -4,9 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       customer_id: {
-        unique: true,
-        type: DataTypes.STRING,
-        allowNull: false,
+        primaryKey:true,
+        type: DataTypes.INTEGER,
+        autoIncrement:true
       },
       username: {
         unique: true,
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      hotel: {
+      address: {
         allowNull: false,
         type: DataTypes.STRING,
       },

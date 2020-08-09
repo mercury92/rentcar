@@ -7,6 +7,8 @@ const app = express();
 
 let allowdOrgins = ["http://localhost:3000"];
 
+const userRoutes = require("./routes/user")
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -20,7 +22,12 @@ app.use(
   })
 );
 
-db.sequelize.sync({ force: true }).then(() => {
+app.use(express.json());
+app.use(express.urlencoded({extended:false}))
+
+app.use("/user",userRoutes);
+
+db.sequelize.sync({ force: false}).then(() => {
   app.listen(process.env.PORT),
     () => {
       console.log(`server is running at port:${process.env.PORT}`);
