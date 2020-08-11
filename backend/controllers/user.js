@@ -18,9 +18,7 @@ const register = async (req, res) => {
       name,
       lastname,
       email,
-      address,
       password: hashedPW,
-
     });
   }
 
@@ -28,7 +26,6 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-
   const { username, password } = req.body;
   const targetUser = await db.User.findOne({ where: { username } });
 
@@ -38,7 +35,7 @@ const login = async (req, res) => {
     const isPWCorrect = bc.compareSync(password, targetUser.password);
 
     if (isPWCorrect) {
-      const payload = { id: targetUser.id, name: targetUser.name };
+      const payload = { id: targetUser.user_id, name: targetUser.name };
       const token = jwt.sign(payload, process.env.SECRET, { expiresIn: 36000 });
 
       res.status(200).send({
@@ -52,10 +49,35 @@ const login = async (req, res) => {
   }
 
   res.status(201).send({ message: "login success" });
-
 };
+
+const getmybill = async (req, res) => {
+  const myId = req.user.user_id;
+  const myBillList = await db.Bill.findAll({
+    where: { user_id: myId },
+    order: [["start_date", "DESC"]],
+    attributes: [
+      "bill_no",
+      "user_id",
+      "car_number",
+      "start_date",
+      "end_date",
+      "amout",
+      "total",
+      "createdAt",
+      "updatedAt",
+    ],
+  });
+
+  if (myBillList) {
+    res.status(200).send({ myBillList });
+  } else {
+    res.status(404).send({ message: "หาไม่เจอหรอก" });
+  }
+};  
 
 module.exports = {
   register,
   login,
+  getmybill,
 };

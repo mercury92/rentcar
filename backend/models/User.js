@@ -1,12 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-
     "User",
     {
-      customer_id: {
-        primaryKey:true,
+      user_id: {
+        primaryKey: true,
         type: DataTypes.INTEGER,
-        autoIncrement:true
+        autoIncrement: true,
       },
       username: {
         unique: true,
@@ -21,25 +20,27 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
+      lastname:{
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       email: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      address: {
+      isAdmin: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
     },
 
     {
-      tableName: "users",
+      tableName: "user",
     }
-
   );
   User.associate = (models) => {
-
-    User.hasMany(models.Transaction, { foreignKey: "customer_id" });
-    
+    User.hasMany(models.Bill, { foreignKey: "user_id" });
   };
 
   return User;
